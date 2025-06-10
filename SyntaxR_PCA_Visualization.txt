@@ -1,0 +1,60 @@
+#Library Yang Digunakan
+library(ggplot2)
+library(factoextra)
+library(readxl)
+
+# Import file Excel
+data <- read_excel("data_pca_tranpose.xlsx")
+
+
+# Atur kolom pertama sebagai rownames (Sample ID)
+rownames(data) <- data$Compound
+data <- data[ , -1]  # hapus kolom Compound agar hanya numeric
+
+
+# Lakukan PCA, skala data agar tiap senyawa punya bobot sama
+pca_result <- prcomp(data, scale. = TRUE)
+
+
+
+#PCA 1 & PCA 2
+fviz_pca_biplot(pca_result,
+                axes = c(1, 2),
+                label = "var",
+                geom.var = "text",
+                geom.ind = "point",
+                pointsize = 4,
+                shape.ind = 26,
+                col.var = "black",
+                #habillage = rownames(data),
+                col.ind = rownames(data),  # misal warna berdasarkan sampel
+                addEllipses = TRUE,
+                ellipse.level = 0.95,
+                repel = TRUE) + 
+  labs(color = "sample")+
+  labs(title = "PCA Biplot: PC1 & PC2",
+       x = "Principal Component 1",
+       y = "Principal Component 2") +
+  theme_minimal() +
+  scale_shape_manual(values = c(19, 19, 19, 19, 19, 19))
+
+#PCA 1 & PCA 3
+fviz_pca_biplot(pca_result,
+                axes = c(1, 3),
+                label = "var",
+                geom.var = "text",
+                geom.ind = "point",
+                pointsize = 4,
+                shape.ind = 26,
+                col.var = "black",
+                habillage = rownames(data),
+                #col.ind = rownames(data),  # misal warna berdasarkan sampel
+                addEllipses = TRUE,
+                ellipse.level = 0.95,
+                repel = TRUE) +
+  labs(color = "sample")+
+  labs(title = "PCA Biplot: PC1 & PC3",
+       x = "Principal Component 1",
+       y = "Principal Component 3") +
+  theme_minimal() +
+  scale_shape_manual(values = c(19, 19, 19, 19, 19, 19))
